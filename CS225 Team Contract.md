@@ -1,7 +1,7 @@
-CS225 Data Structures
-Team Contract 
-Names: Charlie Zhang(wenquz2), Richard Ma(rma15), Tyler Roney(tjroney2)
-Communication
+# CS225 Data Structures
+# Team Contract 
+## Names: Charlie Zhang(wenquz2), Richard Ma(rma15), Tyler Roney(tjroney2)
+# Communication
 Determining how to communicate with your teammates as well as how often you should be communicating is key to a successful remote project. Discuss with your team and draft a statement detailing the following:
 
 Team Meetings When and how often often will your team meet? How long should each meeting last? What software or tool will you use to host these meetings? Will someone take notes (record minutes)?
@@ -13,7 +13,7 @@ Assistance How will your teammates be able to contact you if they need your help
 Respect An effective team needs to have an environment which encourages open expression of ideas. How will you ensure that every member has an opportunity to speak and, more importantly, that every member will actively listen and engage with the thoughts of others?
 - We will adhere to the standards of the CS225 policy on Collaboration and Academic Integrity.
 
-Collaboration
+# Collaboration
 The final project tasks you with finding a fair distribution of labor where each student has some role in the development of each deliverable. However the details of this distribution are up to you. Discuss with your team and draft a statement detailing the following:
 Work Distribution How will you assign workload for this project? How will you address unexpected complications or unforeseen work? You are encouraged to identify the strengths and desires of each team member when distributing work. You do not need to all work equally on a particular deliverable – it is the overall work that should be largely equal.
 - We will split it evenly for now and help eachother when needed.
@@ -25,5 +25,5 @@ Conflict Resolution How will the team resolve situations where there is a disagr
 
 - When there is a disagreement we will work to resolve the differences as a team.
 
-Signatures
+# Signatures
 I Tyler Roney (tjroney2) agree to the terms of this contract.
