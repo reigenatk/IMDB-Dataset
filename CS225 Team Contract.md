@@ -27,4 +27,5 @@ Conflict Resolution How will the team resolve situations where there is a disagr
 
 # Signatures
 I Tyler Roney (tjroney2) agree to the terms of this contract.
-II Charlie Zhang (wenquz2) agrees to the terms of this contract
+II Charlie Zhang (wenquz2) agrees to the terms of this contract.
+III Jack Burns (jackjb2) agrees to the terms of this contract.
