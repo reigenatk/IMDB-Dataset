@@ -5,7 +5,7 @@
 Determining how to communicate with your teammates as well as how often you should be communicating is key to a successful remote project. Discuss with your team and draft a statement detailing the following:
 
 Team Meetings When and how often often will your team meet? How long should each meeting last? What software or tool will you use to host these meetings? Will someone take notes (record minutes)?
-- Zoom, GroupMe, Discord.
+- Zoom, GroupMe, and Discord will be the platforms on which meetings will be hosted and where general communication will take place. We will have at least one meeting every weekend to set goals and distribute work to be completed, this meeting won't have a set time limit and will be scheduled based on the availability of team members.
 
 Assistance How will your teammates be able to contact you if they need your help or opinion on a task? How quickly should you be expected to respond?
 - Through email or one of the above software, respond within a day.
@@ -19,7 +19,7 @@ Work Distribution How will you assign workload for this project? How will you ad
 - We will split it evenly for now and help each other when needed. Most of the workload will probably be assigned after group meetings when we learn of which parts of the project we still need to do.
 
 Time Commitment How many hours of work per week is expected of each group member? Are there prior time commitments that need to be accounted for? How will you address new conflicts or commitments when they do inevitably occur?
-- There isn't a set number of time so long as all the work gets done that is required for each member. When conflicts occur we will message each other about them. Say there's a time conflict, then we can set a new time after learning about it through our communication channels.
+- There isn't a set number of time so long as all the work gets done that is required for each member. To prevent one group member from doing all the work, an upper bound of 5 hours of work per week will be set for each group member. If we find this is too much or too little it can be adjusted. When conflicts occur we will message each other about them. Say there's a time conflict, then we can set a new time after learning about it through our communication channels.
 
 Conflict Resolution How will the team resolve situations where there is a disagreement between members? Situations where one or more members have not accomplished their tasks? Situations where one or more members are habitually late? Are there other hypothetical situations that you as an individual or as a team want to discuss ahead of time? When issues occur, you are strongly encouraged to inform course staff, but only after first trying to resolve the issue as a team in a respectful manner.
 
