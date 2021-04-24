@@ -1,29 +1,20 @@
 # I Target Goal(Leading Question)
 
-In this project, we aim to learn to understand how the PageRank(PR) algorithm work using the web graph dataset rovided by google, after which we are going to 
-expolre a smaller, possiblly manually processed datset to try to rank the most poplular TV shows/animes in the past year by using the PageRank algorithm.
-If time allows, we would also like to make a dynamic graph of Most Popular TV Shows from the past decade in every single year. However, this might be very difficult so
-we might end up not doing it.
-Lead question(s): How does PageRank among websites work? How can we rank the popularity of TV shows and other modern day media using this algorithm?
+In this project, we will analyze official IMDB data about movies and their associated actors + ratings. https://www.imdb.com/interfaces/ is where we are getting this data. We will first investigate just how sparse/dense the graph is. We will do this through the interesting phenomenon of the [Six degrees of Kevin Bacon](https://en.wikipedia.org/wiki/Six_Degrees_of_Kevin_Bacon). Is it true, or just a myth? We will represent actors as nodes and draw an edge between two actors if they have starred in a movie together. Then, using BFS we can allow the user to query our system for any actor, and the BFS will search for the shortest path to Kevin Bacon. Then we can automate our work, having the system query thousands of actors and see which of them take 6 steps or more to reach Kevin Bacon.
 
 # II Dataset Acquisition and Processing
-How to acquire: The initial data set will be aquired from the Stanford Large Dataset Collection, and, specifically, http://snap.stanford.edu/data/web-Google.html
-The data set is in txt.gz format and will be downloaded, stored and maintained in the cs225 final project github directory of our team, as well as our local machines.
-How to process: We will try to convert the file into readable txt first and use the readFile code provided by course staff or write some string splitting algorithm to 
-process it. 
+How to acquire: We get our data in tsv.gz file format. First use 7zip or winzip to unzip, then for the tsv we convert to a txt file using notepad or excel. Specifically we used three datasets, one with all the ratings of the shows (title.ratings.tsv.gz), one with all of the actors in the IMDB database (name.basics.tsv.gz), and one with all the movies/shows in the IMDB database (title.basics.tsv.gz) 
 
 # III Graph Algorithms
 ## a) graph traversal
-BFS/DFS will be used to traverse and (maybe) visualize the data.
+BFS is used to query the data for proximity to Kevin Bacon.
 
-## b)  Floyd–Warshall algorithm
-This algorithm helps determine the shortest path between 2 vertices in the graph and, in this case, websites. This will be helpful in implementing the PR algorithm.
+## b)  ???
 
-## c) PageRank Algorithm
-We plan to try to implement at least a simple version of this algorithm, if not the full version. There are plenty of materials covering this algorithm online for us to 
-draw reference from.
+
+
 
 # IV Basic Timeline
-4.10 - mid-project check-in: Acquire data and implement PR algorithm. 
-4.23 - 4.30 - Apply on web graphs of modern day media and try to get as much result as possible.
+4.10 - mid-project check-in: Acquire data and implement algorithms
+4.23 - 4.30 - Work on fine tuning the algorithms and making UI more friendly
 5.1 - 5.12 - finalizing project, write report, and prepare for the final presentation.
