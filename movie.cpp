@@ -14,6 +14,14 @@ void Movie::addRatingInfo(string rating, string num_votes) {
     this->num_votes = num_votes;
 }
 
+void Movie::addActor(string a) {
+    actors.push_back(a);
+}
+
+vector<string> Movie::getActors() {
+    return actors;
+}
+
 string Movie::getTitle() {
     return title;
 }
