@@ -2,6 +2,8 @@
     "files.associations": {
         "vector": "cpp",
         "__bit_reference": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__split_buffer": "cpp",
+        "initializer_list": "cpp"
     }
 }
