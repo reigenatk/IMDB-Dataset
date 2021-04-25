@@ -7,9 +7,17 @@ How to acquire: We get our data in tsv.gz file format. First use 7zip or winzip 
 
 # III Graph Algorithms
 ## a) graph traversal
-BFS is used to query the data for proximity to Kevin Bacon.
+BFS is used to query the data for proximity to Kevin Bacon. When the user wants to find the path to him, we call a BFS orginating from that node. Then we will trace the path
+that the nodes appear until the end, and then retrace them for the full path.
 
-## b)  ???
+## b) Algorithm covered in class: 
+
+
+## c) Algorithm not covered in class: Kosaraju's algorithm for strongly connected components
+We will use Kosaraju's algorithm to gauge how many "social circles" exist in the general acting world. We will find the sizes of the largest and smallest connected components
+with the undirected, unweighted graph where two actors are connected if they starred in the same movie. How many actors know each other? Are these actors separated by language?
+Do they star in similar movie genres? Are they separated by generation/time, or does time transcend the acting world? These are question we will look to answer based on the
+size + quantity of strongly connected components.
 
 
 
