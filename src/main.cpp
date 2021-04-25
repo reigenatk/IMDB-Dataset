@@ -194,16 +194,16 @@ void parseEdges() {
     cout << "Done parsing edges" << '\n';
 }
 
-void BFS_to_bacon(string requested_actor) {
+int BFS_to_bacon(string requested_actor) {
     // find actor
     if (requested_actor == "Kevin Bacon") {
         cout << "I like bacon";
-        return;
+        return 0;
     }
     if (actor_name_to_id.count(requested_actor) == 0) {
         // actor not in map
         cout << "I'm sorry, but we don't have this actor in our database.\n";
-        return;
+        return -1;
     }
     string ID = actor_name_to_id[requested_actor]; // for example m0000001
     Actor* a = actors[ID];
@@ -231,7 +231,8 @@ void BFS_to_bacon(string requested_actor) {
     }
 
     if (visited[actors[actor_name_to_id["Kevin Bacon"]]] == "") {
-        cout << "We could not find Kevin Bacon. Try increasing the number of movies + actors parsed\n";
+        cout << "We could not find Kevin Bacon from this actor. Try increasing the number of movies + actors parsed\n";
+        return -1;
     } else {
         string actor = "Kevin Bacon";
         vector<string> chain;
@@ -250,46 +251,47 @@ void BFS_to_bacon(string requested_actor) {
             cout << chain[i] << " and " << chain[i+1] << " starred together in " << common_movie << '\n';
         }
         cout << "The chain is " << chain.size() << " actors long\n";
+        return chain.size() - 1;
     }
 
 }
 
-map<pair<Actor*, Actor*>, int> FloydWarshall() {
-    map<pair<Actor*, Actor*>, int> distance; // use this for floyd warshall
-    int INF = 1000000; // arbitrary large number
+// map<pair<Actor*, int>> floydWarshall() {
+//     map<pair<Actor*, Actor*>, int> distance; // use this for floyd warshall
+//     int INF = 1000000; // arbitrary large number
 
-    cout << "Starting floyd warshall...\n";
-    // initialization- if same node then dist = 0, else set to INF
-    for (auto i = actors.begin(); i != actors.end(); i++) {
-        for (auto j = actors.begin(); j != actors.end(); j++) {
-            if (i == j) {
-                distance[{i->second, j->second}] = 0;
-            }
-            else {
-                distance[{i->second, j->second}] = INF;
-            }
-        }
-    }
+//     cout << "Starting floyd warshall...\n";
+//     // initialization- if same node then dist = 0, else set to INF
+//     for (auto i = actors.begin(); i != actors.end(); i++) {
+//         for (auto j = actors.begin(); j != actors.end(); j++) {
+//             if (i == j) {
+//                 distance[{i->second, j->second}] = 0;
+//             }
+//             else {
+//                 distance[{i->second, j->second}] = INF;
+//             }
+//         }
+//     }
 
-    // now for the nodes with edges, set distance = 1
-    for (auto i = actors.begin(); i != actors.end(); i++) {
-        std::set<Actor*> adjacentActors = (i->second)->getAdjacent();
-        for (auto x : adjacentActors) {
-            distance[{i->second, x}] = 1;
-        }
-    }
-    cout << "hi\n";
-    // do the DP
-    for (auto k = actors.begin(); k != actors.end(); k++) {
-        for (auto i = actors.begin(); i != actors.end(); i++) {
-            for (auto j = actors.begin(); j != actors.end(); j++) {
-                distance[{i->second, j->second}] = min(distance[{i->second, j->second}], distance[{i->second, k->second}]+distance[{k->second, j->second}]);
-            }
-        }
-    }
-    cout << "Done with floyd warshall\n";
-    return distance;
-}
+//     // now for the nodes with edges, set distance = 1
+//     for (auto i = actors.begin(); i != actors.end(); i++) {
+//         std::set<Actor*> adjacentActors = (i->second)->getAdjacent();
+//         for (auto x : adjacentActors) {
+//             distance[{i->second, x}] = 1;
+//         }
+//     }
+//     cout << "hi\n";
+//     // do the DP
+//     for (auto k = actors.begin(); k != actors.end(); k++) {
+//         for (auto i = actors.begin(); i != actors.end(); i++) {
+//             for (auto j = actors.begin(); j != actors.end(); j++) {
+//                 distance[{i->second, j->second}] = min(distance[{i->second, j->second}], distance[{i->second, k->second}]+distance[{k->second, j->second}]);
+//             }
+//         }
+//     }
+//     cout << "Done with floyd warshall\n";
+//     return distance;
+// }
 
 void printHelp() {
     cout << "Hello, welcome to the IMDB databank\n";
@@ -315,7 +317,7 @@ int main() {
 
     parseMovieRatings();
 
-    int numOfActorsToRead = 200; // file is 10 million lines long 
+    int numOfActorsToRead = 200000; // file is 10 million lines long 
     parseActors(numOfActorsToRead);
 
     parseEdges();
@@ -328,24 +330,22 @@ int main() {
             string requested_actor;
             cout << "Please enter in an actor and we will find the path to Kevin Bacon.\n";
             getline(cin, requested_actor);
-            BFS_to_bacon(requested_actor);
+            int ret = BFS_to_bacon(requested_actor);
         } else if (userInput == "2") {
             string actor1, actor2;
             cout << "Please enter in your first actor\n";
             getline(cin, actor1);
             cout << "Please enter in your second actor\n";
-            getline(cin, actor2);
-            Actor* a1 = getActorFromName(actor1);
-            Actor* a2 = getActorFromName(actor2);
-            cout << "The distance is " << distance[{a1, a2}] << " actors long" << '\n';
+            // getline(cin, actor2);
+            // Actor* a1 = getActorFromName(actor1);
+            // Actor* a2 = getActorFromName(actor2);
+            // cout << "The distance is " << distance[{a1, a2}] << " actors long" << '\n';
         } else if (userInput == "3") {
             int numActors = actors.size();
             int numActorsWithDistLessThanSix = 0;
             Actor* kevin = getActorFromName("Kevin Bacon");
             for (auto i = actors.begin(); i != actors.end(); i++) {
-                if (distance[{kevin, i->second}] <= 6) {
-                    numActorsWithDistLessThanSix++;
-                }
+                
             }
             double percent = numActorsWithDistLessThanSix / numActors;
             cout << numActorsWithDistLessThanSix << " out of " << numActors << " had a distance less than or equal to 6 to Kevin Bacon\n";
