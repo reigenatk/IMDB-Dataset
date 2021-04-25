@@ -128,7 +128,7 @@ void parseActors(int numOfActorsToRead) {
     ifstream read_actors_txt("../data/actors.txt");
     isFirstLine = true;
     
-    cout << "Parsing actors\n";
+    cout << "Parsing actors...\n";
     string line;
     while (getline(read_actors_txt, line)) {
         if (isFirstLine) {
@@ -173,6 +173,7 @@ void parseActors(int numOfActorsToRead) {
 }
 
 void parseEdges() {
+    cout << "Creating edges...\n";
     // for each movie, initialize the edges between all of its actors
     // an edge in this graph represents when two actors have acted together
     for (auto x : string_to_movie) {
@@ -194,19 +195,16 @@ void parseEdges() {
     cout << "Done parsing edges" << '\n';
 }
 
-int BFS_to_bacon(string requested_actor) {
+void BFS_to_bacon(string requested_actor) {
     // find actor
     if (requested_actor == "Kevin Bacon") {
         cout << "I like bacon";
-        return 0;
     }
     if (actor_name_to_id.count(requested_actor) == 0) {
         // actor not in map
         cout << "I'm sorry, but we don't have this actor in our database.\n";
-        return -1;
     }
-    string ID = actor_name_to_id[requested_actor]; // for example m0000001
-    Actor* a = actors[ID];
+    Actor* a = getActorFromName(requested_actor);
 
     list<Actor*> queue;
 
@@ -232,7 +230,6 @@ int BFS_to_bacon(string requested_actor) {
 
     if (visited[actors[actor_name_to_id["Kevin Bacon"]]] == "") {
         cout << "We could not find Kevin Bacon from this actor. Try increasing the number of movies + actors parsed\n";
-        return -1;
     } else {
         string actor = "Kevin Bacon";
         vector<string> chain;
@@ -251,108 +248,130 @@ int BFS_to_bacon(string requested_actor) {
             cout << chain[i] << " and " << chain[i+1] << " starred together in " << common_movie << '\n';
         }
         cout << "The chain is " << chain.size() << " actors long\n";
-        return chain.size() - 1;
     }
-
 }
 
-// map<pair<Actor*, int>> floydWarshall() {
-//     map<pair<Actor*, Actor*>, int> distance; // use this for floyd warshall
-//     int INF = 1000000; // arbitrary large number
+map<Actor*, int> BFS_from_bacon() {
+    cout << "Calculating distances from Kevin Bacon\n";
+    list<Actor*> queue;
 
-//     cout << "Starting floyd warshall...\n";
-//     // initialization- if same node then dist = 0, else set to INF
-//     for (auto i = actors.begin(); i != actors.end(); i++) {
-//         for (auto j = actors.begin(); j != actors.end(); j++) {
-//             if (i == j) {
-//                 distance[{i->second, j->second}] = 0;
-//             }
-//             else {
-//                 distance[{i->second, j->second}] = INF;
-//             }
-//         }
-//     }
+    Actor* kevin = getActorFromName("Kevin Bacon");
+    // map[actor] = a number representing (distance from kevin bacon + 1) since map defaults to 0 it kinda messes things up
+    map<Actor*, int> visited;
+    visited[kevin] = 1;
+    queue.push_back(kevin);
+    while (!queue.empty()) {
+        Actor* aa = queue.front();
+        queue.pop_front();
+        // cout << aa->getName() << '\n';
+        std::set<Actor*> adj = aa->getAdjacent();
+        for (auto i = adj.begin(); i != adj.end(); i++) {
+            if (visited[*i] == 0) {
+                // if not yet visited
+                // visit and push into queue
+                visited[*i] = visited[aa] + 1;
+                queue.push_back(*i);
+            }
+        }
+    }
+    cout << "Done calculating distances from Kevin Bacon\n";
+    return visited;
+}
 
-//     // now for the nodes with edges, set distance = 1
-//     for (auto i = actors.begin(); i != actors.end(); i++) {
-//         std::set<Actor*> adjacentActors = (i->second)->getAdjacent();
-//         for (auto x : adjacentActors) {
-//             distance[{i->second, x}] = 1;
-//         }
-//     }
-//     cout << "hi\n";
-//     // do the DP
-//     for (auto k = actors.begin(); k != actors.end(); k++) {
-//         for (auto i = actors.begin(); i != actors.end(); i++) {
-//             for (auto j = actors.begin(); j != actors.end(); j++) {
-//                 distance[{i->second, j->second}] = min(distance[{i->second, j->second}], distance[{i->second, k->second}]+distance[{k->second, j->second}]);
-//             }
-//         }
-//     }
-//     cout << "Done with floyd warshall\n";
-//     return distance;
-// }
+
 
 void printHelp() {
     cout << "Hello, welcome to the IMDB databank\n";
     cout << "Press 1 to start a Kevin Bacon Search using BFS\n";
-    cout << "Press 2 for a broader search between two individuals using Floyd Warshall\n";
-    cout << "Press 3 for analytics on the 'Six Degrees of Kevin Bacon' theory\n";
-    cout << "Press 4 to terminate the program\n";
-    cout << "Press 0 to see this help menu again\n";
+    cout << "Press 2 for analytics on the 'Six Degrees of Kevin Bacon' theory\n";
+    cout << "Press 3 for Dijkstra\n";
+    cout << "Press 4 for Kosaraju\n";
+    cout << "Press 5 to terminate the program\n";
 }
 
 string promptUserInput() {
+    cout << '\n';
     printHelp();
     string userInput;
     getline(cin, userInput);
     return userInput;
 }
 
+// taken from https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+bool is_number(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
 int main() {
 
     // pre user-input processing
-    int numOfMoviesToRead = 3000000; // file is 7 million lines long 
-    parseMovieNames(numOfMoviesToRead);
+    string numOfMoviesToRead;
+    while (!is_number(numOfMoviesToRead)) {
+        cout << "How many movies would you like to parse? (example: 3000000. file is 7 million long total)\n";
+        getline(cin, numOfMoviesToRead);
+    }
+
+    parseMovieNames(stoi(numOfMoviesToRead));
 
     parseMovieRatings();
 
-    int numOfActorsToRead = 200000; // file is 10 million lines long 
-    parseActors(numOfActorsToRead);
+    string numOfActorsToRead; // example: 200000, file is 10 million lines long 
+    while (!is_number(numOfActorsToRead)) {
+        cout << "How many actors would you like to parse? (example: 200000. file is 10 million long total)\n";
+        getline(cin, numOfActorsToRead);
+    }
+    
+    parseActors(stoi(numOfActorsToRead));
 
     parseEdges();
-    // map<pair<Actor*, Actor*>, int> distance = FloydWarshall();
+
+    // this map has all the shortest distances from each actor to kevin bacon
+    map<Actor*, int> distance = BFS_from_bacon();
     while (true) {
         string userInput = promptUserInput();
-        if (userInput == "0") {
-            printHelp();
-        } else if (userInput == "1") {
+        if (userInput == "1") {
             string requested_actor;
             cout << "Please enter in an actor and we will find the path to Kevin Bacon.\n";
             getline(cin, requested_actor);
-            int ret = BFS_to_bacon(requested_actor);
+            BFS_to_bacon(requested_actor);
         } else if (userInput == "2") {
-            string actor1, actor2;
-            cout << "Please enter in your first actor\n";
-            getline(cin, actor1);
-            cout << "Please enter in your second actor\n";
-            // getline(cin, actor2);
-            // Actor* a1 = getActorFromName(actor1);
-            // Actor* a2 = getActorFromName(actor2);
-            // cout << "The distance is " << distance[{a1, a2}] << " actors long" << '\n';
-        } else if (userInput == "3") {
             int numActors = actors.size();
             int numActorsWithDistLessThanSix = 0;
             Actor* kevin = getActorFromName("Kevin Bacon");
+            int sumOfDistances = 0;
             for (auto i = actors.begin(); i != actors.end(); i++) {
-                
+                if (distance[i->second] != 0) {
+                    sumOfDistances += (distance[i->second]-1);
+                }
+                if (i->second->getName() == "Kevin Bacon") {
+                    // if kevin himself, continue. he doesn't count
+                    continue;
+                }
+                // if == 0 it means it isn't reachable
+                if (distance[i->second] <= 7 && distance[i->second] != 0) {
+                    numActorsWithDistLessThanSix++;
+                }
             }
-            double percent = numActorsWithDistLessThanSix / numActors;
+            double percent = numActorsWithDistLessThanSix / (double) numActors;
+            double average = sumOfDistances / (double) numActors;
             cout << numActorsWithDistLessThanSix << " out of " << numActors << " had a distance less than or equal to 6 to Kevin Bacon\n";
-            cout << setprecision(2) << "That's " << percent << "%!\n";
+            cout << "That's " << percent*100.0 << "%!\n";
+            cout << "The average distance was " << average << '\n';
+            cout << "Try changing the number of actors + movies parsed to see if you get a higher or lower percentage!\n";
+        } else if (userInput == "3") {
+            
         } else if (userInput == "4") {
+            
+        }
+        else if (userInput == "5") {
             cout << "Thanks for using the IMDB databank. Have a nice day!\n";
             break;
+        }
+        else {
+            cout << "I don't understand what you typed. Please press 0 for help\n";
         }
     }
     return 0;
