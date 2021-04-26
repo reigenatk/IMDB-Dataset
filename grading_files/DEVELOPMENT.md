@@ -12,3 +12,8 @@ reached everything. Also, it makes sure to mark which node visited it so that we
 root node in order to find the relevant information.
 
 The next steps will be to implement our next algorithms which are going to involve the rating system somehow.
+
+
+Week of (4/25 to 5/1):
+
+We implemented a fully working version of Dijkstra's algorithm, meeting algorithm 2 of our project proposal. 

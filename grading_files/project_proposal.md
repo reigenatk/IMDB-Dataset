@@ -10,14 +10,21 @@ How to acquire: We get our data in tsv.gz file format. First use 7zip or winzip 
 BFS is used to query the data for proximity to Kevin Bacon. When the user wants to find the path to him, we call a BFS orginating from that node. Then we will trace the path
 that the nodes appear until the end, and then retrace them for the full path.
 
-## b) Algorithm covered in class: 
-
+## b) Algorithm covered in class: Dijkstra's Algorithm
+We will create a weighted, undirected graph where actors A and B have a connected edge with weight equal to 10* (10 - the rating of their best movie together). 
+The reason the formula is like this is because at first ratings are from 0-10, and since Dijkstra is a minimal distance algorithm we need to flip it. Then its 10* since
+the ratings are doubles with 1 digit precision and we want them to be integer. What ends up happening is that highly rated movies have lower edge weights, and worse rated movies have higher weights. Actors that have not acted
+together before will have no edge between them. Then we will use Dijkstra's algorithm to create a "recommendation" system for the user. They can query for two
+actors, call them A and B. We will run Dijkstra's algorithm onto A, finding the shortest path to B. What this represents in this graph is the least amount of movies and
+best rated movies. So we can capture the essence of what the user likes about these two actors by recommending similar actors whom they've worked with.
 
 ## c) Algorithm not covered in class: Kosaraju's algorithm for strongly connected components
-We will use Kosaraju's algorithm to gauge how many "social circles" exist in the general acting world. We will find the sizes of the largest and smallest connected components
-with the undirected, unweighted graph where two actors are connected if they starred in the same movie. How many actors know each other? Are these actors separated by language?
-Do they star in similar movie genres? Are they separated by generation/time, or does time transcend the acting world? These are question we will look to answer based on the
-size + quantity of strongly connected components.
+Are actors and directors influenced by one another? We will seek to find the answer to this question using Kosaraju's Algorithm. In order to do this we must first create the graph. This graph will be directed, but unweighted. We will draw edges as follows: for an actor A, we will go through all their films. For every film that isn't their last, we will find the director of that film and draw a directed edge from the director to that actor. And a very similar process happens for the actors. 
+The reason why we chose to have it be drawn if and only if the film they worked together in wasn't the last film is because the whole idea of "influence" is that you work together
+with a person and then you go out and make something else with your past work in mind. So if it was their last film, then none of their other work really was influenced.
+We should be left with a directed graph, and we will then seek to find the strongly connected components of this graph. 
+This experiment will hopefully help us answer a few questions: How many actors know each other? Are these actors separated by language? 
+Do they star in similar movie genres? Are they separated by generation/time, or does time transcend the acting world? Are modern actors influenced by old directors/actors? These are question we will look to answer based on the size + quantity of strongly connected components. How sparse/dense will the drawn graph be?
 
 
 
