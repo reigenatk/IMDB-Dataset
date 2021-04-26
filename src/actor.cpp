@@ -23,3 +23,20 @@ string Actor::getName() {
 vector<Movie*> Actor::getMovies() {
     return movies;
 }
+
+void Actor::addEdge(Actor* a, int d) {
+    if (edges[a] == 0) {
+        edges[a] = d;
+    }
+    else {
+        edges[a] = std::min(edges[a], d); // take min here because smaller = higher rating and we want highest ratings
+    }
+}
+
+map<Actor*, int> Actor::getEdges() {
+    return edges;
+}
+
+int Actor::getEdge(Actor* a) {
+    return edges[a];
+}

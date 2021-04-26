@@ -13,6 +13,9 @@ public:
     string getTitle();
     void addActor(string a);
     vector<string> getActors();
+    string getYear();
+    string getRating();
+    string getNumOfRaters();
 
 private:
     string rating;

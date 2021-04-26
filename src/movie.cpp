@@ -25,3 +25,15 @@ vector<string> Movie::getActors() {
 string Movie::getTitle() {
     return title;
 }
+
+string Movie::getYear() {
+    return startYear;
+}
+
+string Movie::getRating() {
+    return rating;
+}
+
+string Movie::getNumOfRaters() {
+    return num_votes;
+}

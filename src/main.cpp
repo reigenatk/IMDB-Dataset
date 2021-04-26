@@ -6,8 +6,11 @@
 #include <algorithm>
 #include <map>
 #include <iterator>
+#include <string>
 #include <iomanip>
 #include <list>
+#include <stdio.h>
+#include <limits.h>
 
 using std::cout;
 using std::map;
@@ -45,7 +48,7 @@ Actor* getActorFromName(string name) {
     return actors[actor_name_to_id[name]];
 }
 
-string find_movie_in_common(string actor_name_1, string actor_name_2) {
+Movie* find_movie_in_common(string actor_name_1, string actor_name_2) {
     Actor* actor1 = getActorFromName(actor_name_1);
     Actor* actor2 = getActorFromName(actor_name_2);
 
@@ -56,9 +59,37 @@ string find_movie_in_common(string actor_name_1, string actor_name_2) {
     for (auto x : actor2->getMovies()) {
         if (common_movies.find(x->getTitle()) != common_movies.end()) {
             // we have the matching movie
-            return x->getTitle();
+            return x;
         }
     }
+}
+
+Movie* find_best_movie_in_common(string actor_name_1, string actor_name_2) {
+    Actor* actor1 = getActorFromName(actor_name_1);
+    Actor* actor2 = getActorFromName(actor_name_2);
+
+    vector<Movie*> actor1_movies;
+    for (auto x : actor1->getMovies()) {
+        actor1_movies.push_back(x);
+    }
+    vector<Movie*> actor2_movies;
+    for (auto x : actor2->getMovies()) {
+        actor2_movies.push_back(x);
+    }
+    int best_rating = 0;
+    Movie* ret = nullptr;
+    for (auto x : actor2_movies) {
+        for (auto y : actor1_movies) {
+            if (x == y && stoi(x->getRating()) > best_rating) {
+                ret = x;
+                best_rating = stoi(x->getRating());
+            }
+        }
+    }
+    if (ret == nullptr) {
+        cout << "kms";
+    }
+    return ret;
 }
 
 void parseMovieNames(int numOfMoviesToRead) {
@@ -178,17 +209,25 @@ void parseEdges() {
     // an edge in this graph represents when two actors have acted together
     for (auto x : string_to_movie) {
         vector<string> actors_in_movie = x.second->getActors();
-        // cout << x.first << " ";
-        // for (auto y : actors_in_movie) {
-        //     cout << y << " ";
-        // }
-        // cout << '\n';
+
         for (int i = 0; i < actors_in_movie.size(); i++) {
             for (int j = i+1; j < actors_in_movie.size(); j++) {
                 Actor* actor1 = actors[actors_in_movie[i]];
                 Actor* actor2 = actors[actors_in_movie[j]];
                 actor1->addAdjacent(actor2);
                 actor2->addAdjacent(actor1);
+                // process the rating x (0.0-10.0) by doing (10-x) and then multiplying by 10
+                
+                if (x.second->getRating() == "") {
+                    continue; // if no rating continue
+                }
+                double rating_of_movie = std::stod(x.second->getRating());
+                double inverse_rating = 10 - rating_of_movie;
+                int times10 = (int) 10 * inverse_rating;
+
+                actor1->addEdge(actor2, times10);
+                actor2->addEdge(actor1, times10);
+
             }
         }
     }
@@ -244,8 +283,9 @@ void BFS_to_bacon(string requested_actor) {
 
         std::reverse(chain.begin(), chain.end());
         for (int i = 0; i < chain.size() - 1; i++) {
-            string common_movie = find_movie_in_common(chain[i], chain[i+1]);
-            cout << chain[i] << " and " << chain[i+1] << " starred together in " << common_movie << '\n';
+            Movie* common_movie = find_movie_in_common(chain[i], chain[i+1]);
+            string common_movie_str = common_movie->getTitle() + ", (" + common_movie->getYear() + ")";
+            cout << chain[i] << " and " << chain[i+1] << " starred together in " << common_movie_str << '\n';
         }
         cout << "The chain is " << chain.size() << " actors long\n";
     }
@@ -284,7 +324,7 @@ void printHelp() {
     cout << "Hello, welcome to the IMDB databank\n";
     cout << "Press 1 to start a Kevin Bacon Search using BFS\n";
     cout << "Press 2 for analytics on the 'Six Degrees of Kevin Bacon' theory\n";
-    cout << "Press 3 for Dijkstra\n";
+    cout << "Press 3 for a recommendation\n";
     cout << "Press 4 for Kosaraju\n";
     cout << "Press 5 to terminate the program\n";
 }
@@ -303,6 +343,82 @@ bool is_number(const std::string& s)
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
+}
+
+int minDistance(vector<int> dist, vector<bool> isFinal) {
+    int min_val = INT_MAX;
+    int min_index;
+    for (int i = 0; i < dist.size(); i++) {
+        if (!isFinal[i] && dist[i] < min_val) {
+            min_val = dist[i];
+            min_index = i;
+        }
+    }
+    return min_index;
+}
+
+vector<Actor*> dijkstra(Actor* src, Actor* dest) {
+    int num_actors = actors.size();
+    int index = 0;
+    map<Actor*, int> mapping;
+    map<int, Actor*> reverse_mapping;
+    for (auto x : actors) {
+        mapping[x.second] = index;
+        reverse_mapping[index] = x.second;
+        index++;
+    }
+
+    vector<int> dist(num_actors, INT_MAX);
+    vector<bool> isFinal(num_actors, false);
+    vector<int> parent(num_actors);
+
+    cout << "src node: " << mapping[src] << '\n';
+    cout << "dst node: " << mapping[dest] << '\n';
+    dist[mapping[src]] = 0;
+    parent[mapping[src]] = -1; // mark it as root node
+    for (int i = 0; i < num_actors - 1; i++) {
+        // find the lowest distance node
+        int u = minDistance(dist, isFinal);
+        isFinal[u] = true;
+        map<Actor*, int> edges = reverse_mapping[u]->getEdges();
+        for (int j = 0; j < num_actors; j++) {
+            int edgelength = edges[reverse_mapping[j]];
+            // cout << "edge between " << u << " and " << j << " is " << edgelength << '\n';
+            if (edgelength == 0) {
+                continue; // if dist = 0 then there is no edge between actor u and actor j
+            }
+            // otherwise there is an edge. See if it reduces the distance.
+            if (!isFinal[j] && dist[u] + edgelength < dist[j]) {
+                dist[j] = dist[u] + edgelength;
+                // cout << "new dist of " << j << " is " << dist[j] << '\n';
+                parent[j] = u;
+            }
+        }
+    }
+    vector<int> path;
+    int cur = mapping[dest];
+    int var = 300;
+    cout << "distance: " << dist[cur] << '\n';
+    cout << "path:\n";
+    while (true) {
+        if (var > 0) {
+            cout << cur << '\n';
+            var--;
+        }
+        path.push_back(cur);
+        int par = parent[cur];
+        if (par == -1) {
+            // we've reached root, break
+            break;
+        }
+        cur = par;
+    }
+    std::reverse(path.begin(), path.end()); // this is the path from root to dest, but its still made of ints. Need to translate back into pointers
+    vector<Actor*> pointer_path;
+    for (auto &x : path) {
+        pointer_path.push_back(reverse_mapping[x]);
+    }
+    return pointer_path;
 }
 
 int main() {
@@ -362,6 +478,33 @@ int main() {
             cout << "The average distance was " << average << '\n';
             cout << "Try changing the number of actors + movies parsed to see if you get a higher or lower percentage!\n";
         } else if (userInput == "3") {
+            cout << "Please enter two actors that you like:\n";
+            string actor1;
+            getline(cin, actor1);
+            cout << "Second actor:\n";
+            string actor2;
+            getline(cin, actor2);
+            Actor* a1 = getActorFromName(actor1);
+            Actor* a2 = getActorFromName(actor2);
+            vector<Actor*> shortest_path = dijkstra(a1, a2);
+            if (shortest_path.size() == 0) {
+                cout << "We could not find a path. Try another pair or increase number of actors/movies read in\n";
+                continue;
+            }
+            double total_sum = 0;
+            double total_votes = 0;
+            for (int i = 0; i < shortest_path.size() - 1; i++) {
+                Actor* a1 = shortest_path[i];
+                Actor* a2 = shortest_path[i+1];
+                Movie* common_movie = find_best_movie_in_common(a1->getName(), a2->getName());
+                total_sum += (double) std::stod(common_movie->getNumOfRaters()) * std::stod(common_movie->getRating());
+                total_votes += (double) std::stod(common_movie->getNumOfRaters());
+                cout << common_movie->getTitle() << ", (" + common_movie->getYear() << ") rated " << common_movie->getRating() << " by " << common_movie->getNumOfRaters() << '\n';
+            }
+            double weighted_rating = total_sum / (double) total_votes;
+            
+            cout << "We recommend you watch " << shortest_path.size() << " movies with an weighted rating of " << weighted_rating << '\n';
+            cout << "We think you will like these movies based on the two actors you listed!\n";
             
         } else if (userInput == "4") {
             
