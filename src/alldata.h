@@ -24,6 +24,7 @@ public:
     void parseActors(int num, string path);
     void parseMovieRatings(string path);
     void parseEdges();
+    void parseDirectors(string path);
     Actor* getActorFromName(string name);
 
     void BFS_to_bacon(string requested_actor);
@@ -50,6 +51,7 @@ private:
     map<string, string> actor_name_to_id;
     int numOfMoviesToRead;
     int numOfActorsToRead;
+    int numOfDirectorsToRead;
     // this map has all the shortest distances from each actor to kevin bacon
     map<Actor*, int> distance;
     
