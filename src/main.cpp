@@ -56,8 +56,10 @@ int main() {
         cout << "How many actors would you like to parse? (example: 200000. file is 10 million long total)\n";
         getline(cin, numOfActorsToRead);
     }
+
     AllData instance(stoi(numOfMoviesToRead), stoi(numOfActorsToRead));
     map<string, Actor*> actors = instance.getActors();
+    map<string, string> actornametoID = instance.getActorNameToID();
     while (true) {
         string userInput = promptUserInput();
         if (userInput == "1") {
@@ -65,7 +67,7 @@ int main() {
             cout << "Please enter in an actor and we will find the path to Kevin Bacon.\n";
             while (true) {
                 getline(cin, requested_actor);
-                if (actors.find(requested_actor) != actors.end()) {
+                if (actornametoID.find(requested_actor) != actornametoID.end()) {
                     break;
                 } else {
                     cout << "I'm sorry, we don't have this actor. Please try again\n";
@@ -106,7 +108,7 @@ int main() {
             string actor1;
             while (true) {
                 getline(cin, actor1);
-                if (actors.find(actor1) != actors.end()) {
+                if (actornametoID.find(actor1) != actornametoID.end()) {
                     break;
                 } else {
                     cout << "I'm sorry, we don't have this actor. Please try again\n";
@@ -117,7 +119,7 @@ int main() {
             string actor2;
             while (true) {
                 getline(cin, actor2);
-                if (actors.find(actor2) != actors.end()) {
+                if (actornametoID.find(actor2) != actornametoID.end()) {
                     break;
                 } else {
                     cout << "I'm sorry, we don't have this actor. Please try again\n";
@@ -153,7 +155,7 @@ int main() {
             break;
         }
         else {
-            cout << "I don't understand what you typed. Please press 0 for help\n";
+            cout << "I don't understand what you typed. Please try again\n";
         }
     }
     return 0;
