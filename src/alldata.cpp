@@ -4,10 +4,12 @@
 AllData::AllData(int numOfMovies, int numOfActors) {
     numOfMoviesToRead = numOfMovies;
     numOfActorsToRead = numOfActors;
+    numOfDirectorsToRead = numOfMoviesToRead;
     parseMovieNames(numOfMovies, "../data/movies.txt");
     
     parseMovieRatings("../data/ratings.txt");
     parseActors(numOfActors, "../data/actors.txt");
+    parseDirectors("../data/directors.txt");
     parseEdges();
 
     distance = BFS_from_bacon();
@@ -110,6 +112,7 @@ void AllData::parseMovieRatings(string path) {
     cout << "Done parsing " << numRatingsParsed << " ratings" << '\n';
 }
 
+
 void AllData::parseActors(int numOfActorsToRead, string path) {
     // parse actors
     ifstream read_actors_txt(path);
@@ -136,12 +139,14 @@ void AllData::parseActors(int numOfActorsToRead, string path) {
 
         vector<Movie*> notable_movies;
         for (auto x : movies_list) {
+            x.resize(9);
             // if movie is not in list don't bother adding
-            if (string_to_movie.find(x) == string_to_movie.end()) {
+            if (string_to_movie.count(x) == 0) {
                 continue;
             }
             notable_movies.push_back(string_to_movie[x]);
         }
+
         Actor* a = new Actor(words[1], words[2], words[3], notable_movies);
         actors[words[0]] = a;
         actor_name_to_id[words[1]] = words[0]; // name to ID mapping
@@ -151,7 +156,7 @@ void AllData::parseActors(int numOfActorsToRead, string path) {
             if (string_to_movie.count(x) == 0) {
                 continue;
             }
-            string_to_movie[x]->addActor(words[0]);
+            string_to_movie[x]->addPerson(words[0]);
             // cout << "add " << words[0] << " to movie " << x << '\n';
         }
         numOfActorsToRead--;
@@ -159,21 +164,67 @@ void AllData::parseActors(int numOfActorsToRead, string path) {
     cout << "Done parsing " << actors.size() << " actors" << '\n';
 }
 
+void AllData::parseDirectors(string path) {
+    int tmp = numOfDirectorsToRead;
+
+    ifstream read_titles_txt(path);
+    // parse directors
+    bool isFirstLine = true;
+
+    string line;
+
+    cout << "Parsing director information...\n";
+    while (getline(read_titles_txt, line)) {
+        // ignore first line
+        if (isFirstLine) {
+            isFirstLine = false;
+            continue;
+        }
+        if (numOfDirectorsToRead == 0) {
+            break;
+        }
+        // split the text
+        std::vector<std::string> words;
+        split2(line, words);
+
+        if (words.size() < 3) {
+            continue;
+        }
+        vector<string> directors_list = split_commas(words[1]);
+        string movie = words[0];
+        Movie* m = string_to_movie[movie];
+        for (auto x : directors_list) {
+            if (actor_name_to_id[x] == "") {
+                // if this person wasn't added, just skip
+                continue;
+            }
+            m->addDirector(x);
+            // mark x as a director
+            cout << "added director to movie\n";
+            getActorFromName(x)->setDirector(true);
+        }
+        numOfDirectorsToRead--;
+    }
+    cout << "Done parsing " << tmp << " directors" << '\n';
+}
+
 void AllData::parseEdges() {
     cout << "Creating edges...\n";
-    // for each movie, initialize the edges between all of its actors
-    // an edge in this graph represents when two actors have acted together
     for (auto x : string_to_movie) {
-        vector<string> actors_in_movie = x.second->getActors();
+        vector<string> actors_in_movie = x.second->getPeople();
 
         for (int i = 0; i < actors_in_movie.size(); i++) {
             for (int j = i+1; j < actors_in_movie.size(); j++) {
                 Actor* actor1 = actors[actors_in_movie[i]];
                 Actor* actor2 = actors[actors_in_movie[j]];
+                // for each movie, initialize the edges between all of its actors
+                // an edge in this graph represents when two actors have acted together
+                // this is the unweighted, undirected graph for BFS
                 actor1->addAdjacent(actor2);
                 actor2->addAdjacent(actor1);
+
                 // process the rating x (0.0-10.0) by doing (10-x) and then multiplying by 10
-                
+                // this is for the weighted, undirected graph for Dijkstra
                 if (x.second->getRating() == "") {
                     continue; // if no rating continue
                 }
@@ -187,8 +238,52 @@ void AllData::parseEdges() {
             }
         }
     }
-    cout << "Done parsing edges" << '\n';
+    cout << "Done parsing unweighted & weighted edges" << '\n';
+    
+    // final graph for Kosaraju, directed, unweighted graph. Loop through each person and
+    // find every movie except their last, if they are a actor then draw an edge from all directors in their previous movies to them
+    // and if they are director, draw edge from all actors they have worked with to them
+
+    for (auto x : actors) {
+        Movie* last_movie = x.second->getLastMovie();
+        vector<Movie*> all_movies = x.second->getMovies(); 
+
+
+        for (auto movie: all_movies) {
+            if (movie == last_movie) {
+                continue;
+            }
+            // check if person is actor or director
+            if (x.second->getIsDirector() == true) {
+
+                // person was director
+                // get all actors and directors
+                vector<string> people = movie->getPeople();
+                vector<string> directors = movie->getDirectors();
+                for (auto person : people) {
+                    if (find(directors.begin(), directors.end(), person) == directors.end()) {
+                        // find actors only, and say that actor a influenced this director
+                        Actor* a = getActorFromName(person);
+                        a->addInfluence(x.second);
+                        x.second->addInfluenceBy(a);
+                    }
+                }
+            } else {
+                // person is actor
+                // get all directors
+                vector<string> directors = movie->getDirectors();
+                for (auto person : directors) {
+                    Actor* a = getActorFromName(person);
+                    a->addInfluence(x.second);
+                    x.second->addInfluenceBy(a);
+                }
+            }
+        }
+    }
+
+    cout << "Done parsing directed edges" << '\n';
 }
+
 
 Actor* AllData::getActorFromName(string name) {
     return actors[actor_name_to_id[name]];
