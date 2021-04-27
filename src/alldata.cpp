@@ -5,8 +5,9 @@ AllData::AllData(int numOfMovies, int numOfActors) {
     numOfMoviesToRead = numOfMovies;
     numOfActorsToRead = numOfActors;
     numOfDirectorsToRead = numOfMoviesToRead;
+
+    // change file paths here
     parseMovieNames(numOfMovies, "../data/movies.txt");
-    
     parseMovieRatings("../data/ratings.txt");
     parseActors(numOfActors, "../data/actors.txt");
     parseDirectors("../data/directors.txt");
@@ -192,16 +193,23 @@ void AllData::parseDirectors(string path) {
         }
         vector<string> directors_list = split_commas(words[1]);
         string movie = words[0];
+        if (string_to_movie.count(words[0]) == 0) {
+            continue; // if we don't have this movie, don't bother
+        }
         Movie* m = string_to_movie[movie];
+
         for (auto x : directors_list) {
-            if (actor_name_to_id[x] == "") {
+            if (actors.count(x) == 0) {
+                // cout << "skip" << numOfDirectorsToRead << '\n';
                 // if this person wasn't added, just skip
                 continue;
             }
+
             m->addDirector(x);
+            // cout << "new size of directors: " << m->getDirectors().size() << '\n';
             // mark x as a director
-            cout << "added director to movie\n";
-            getActorFromName(x)->setDirector(true);
+            // cout << "added director to movie\n";
+            actors[x]->setDirector(true);
         }
         numOfDirectorsToRead--;
     }
@@ -246,6 +254,7 @@ void AllData::parseEdges() {
 
     for (auto x : actors) {
         Movie* last_movie = x.second->getLastMovie();
+        // cout << "actor " << x.first << "'s last movie is " << last_movie->getTitle() << '\n';
         vector<Movie*> all_movies = x.second->getMovies(); 
 
 
@@ -253,33 +262,42 @@ void AllData::parseEdges() {
             if (movie == last_movie) {
                 continue;
             }
+            vector<string> people = movie->getPeople();
+            vector<string> directors = movie->getDirectors();
+            // cout << "num of people " << people.size() << '\n';
+            // cout << "num of dir " << directors.size() << '\n';
             // check if person is actor or director
             if (x.second->getIsDirector() == true) {
 
                 // person was director
                 // get all actors and directors
-                vector<string> people = movie->getPeople();
-                vector<string> directors = movie->getDirectors();
+                
                 for (auto person : people) {
                     if (find(directors.begin(), directors.end(), person) == directors.end()) {
                         // find actors only, and say that actor a influenced this director
-                        Actor* a = getActorFromName(person);
+                        // cout << "found actor influencing director\n";
+                        Actor* a = actors[person];
                         a->addInfluence(x.second);
                         x.second->addInfluenceBy(a);
                     }
                 }
             } else {
-                // person is actor
+                // person is actor ID
                 // get all directors
-                vector<string> directors = movie->getDirectors();
                 for (auto person : directors) {
-                    Actor* a = getActorFromName(person);
+                    // cout << "found dir influencing actr\n";
+                    Actor* a = actors[person];
                     a->addInfluence(x.second);
                     x.second->addInfluenceBy(a);
                 }
             }
         }
     }
+
+    // for (auto x : actors) {
+    //     cout << "actor " << x.second->getName() << "influenced " << x.second->getInfluenced().size() << "people " << '\n';
+    //     cout << "actor " << x.second->getName() << "was influenced by " << x.second->getInfluencedBy().size() << "people " << '\n';
+    // }
 
     cout << "Done parsing directed edges" << '\n';
 }
@@ -386,6 +404,7 @@ Movie* AllData::find_movie_in_common(string actor_name_1, string actor_name_2) {
             return x;
         }
     }
+    return nullptr;
 }
 
 Movie* AllData::find_best_movie_in_common(string actor_name_1, string actor_name_2) {
@@ -496,4 +515,9 @@ vector<Actor*> AllData::dijkstra(Actor* src, Actor* dest) {
         pointer_path.push_back(reverse_mapping[x]);
     }
     return pointer_path;
+}
+
+void AllData::kosaraju() {
+    Kosaraju k(actors);
+    cout << "done\n";
 }

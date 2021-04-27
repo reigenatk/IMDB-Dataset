@@ -40,6 +40,7 @@ string Movie::getNumOfRaters() {
 
 void Movie::addDirector(string a) {
     directors.push_back(a);
+    
 }
 vector<string> Movie::getDirectors() {
     return directors;

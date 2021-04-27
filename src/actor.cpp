@@ -53,6 +53,7 @@ int Actor::getEdge(Actor* a) {
 
 void Actor::setDirector(bool val) {
     is_director = val;
+    // cout << "Director set to true\n";
 }
 bool Actor::getIsDirector() {
     return is_director;
@@ -85,8 +86,10 @@ std::set<Actor*> Actor::getInfluencedBy() {
 }
 void Actor::addInfluence(Actor* person) {
     influenced.insert(person);
+    // cout << "added to influence: " << person << " for actor " << actor_name << '\n';
 }
 
 void Actor::addInfluenceBy(Actor* person) {
     influenced_by.insert(person);
+    // cout << "added to influence by: " << person << " for actor " << actor_name << '\n';
 }

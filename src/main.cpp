@@ -20,7 +20,7 @@ void printHelp() {
     cout << "Press 1 to start a Kevin Bacon Search using BFS\n";
     cout << "Press 2 for analytics on the 'Six Degrees of Kevin Bacon' theory\n";
     cout << "Press 3 for a recommendation\n";
-    cout << "Press 4 for Kosaraju\n";
+    cout << "Press 4 for an analysis on circles of actors\n";
     cout << "Press 5 to terminate the program\n";
 }
 
@@ -148,7 +148,7 @@ int main() {
             cout << "We think you will like these movies based on the two actors you listed!\n";
             
         } else if (userInput == "4") {
-            
+            instance.kosaraju();
         }
         else if (userInput == "5") {
             cout << "Thanks for using the IMDB databank. Have a nice day!\n";

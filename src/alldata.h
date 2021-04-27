@@ -2,8 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "movie.h"
-#include "actor.h"
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -14,6 +12,9 @@
 #include <stdio.h>
 #include <limits.h>
 
+#include "movie.h"
+#include "actor.h"
+#include "kosaraju.h"
 using namespace std;
 using std::string;
 
@@ -27,10 +28,15 @@ public:
     void parseDirectors(string path);
     Actor* getActorFromName(string name);
 
+    // BFS methods
     void BFS_to_bacon(string requested_actor);
     map<Actor*, int> BFS_from_bacon();
 
+    // dijkstra
     vector<Actor*> dijkstra(Actor* src, Actor* dest);
+    
+    // kosaraju
+    void kosaraju();
 
     map<string, Movie*> getStringToMovie();
     map<string, Actor*> getActors();
@@ -52,8 +58,14 @@ private:
     int numOfMoviesToRead;
     int numOfActorsToRead;
     int numOfDirectorsToRead;
+
     // this map has all the shortest distances from each actor to kevin bacon
     map<Actor*, int> distance;
+
+    // the first vector has the component that actor x belongs to
+    // other vector is a list of all the components with their respective entries
+    vector<int> component;
+    vector<vector<int>> all_components;
     
     vector<string> split_commas(string s);
 };
