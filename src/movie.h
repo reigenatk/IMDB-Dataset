@@ -11,8 +11,10 @@ public:
     Movie(string title, string movie_type, bool is_adult, string startYear, string endYear, string runtime);
     void addRatingInfo(string rating, string num_votes);
     string getTitle();
-    void addActor(string a);
-    vector<string> getActors();
+    void addPerson(string a);
+    vector<string> getPeople();
+    void addDirector(string a);
+    vector<string> getDirectors();
     string getYear();
     string getRating();
     string getNumOfRaters();
@@ -26,6 +28,6 @@ private:
     string startYear;
     string endYear;
     string runtime;
-    vector<string> actors;
-
+    vector<string> people;
+    vector<string> directors;
 };
