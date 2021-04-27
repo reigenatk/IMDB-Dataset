@@ -14,12 +14,12 @@ void Movie::addRatingInfo(string rating, string num_votes) {
     this->num_votes = num_votes;
 }
 
-void Movie::addActor(string a) {
-    actors.push_back(a);
+void Movie::addPerson(string a) {
+    people.push_back(a);
 }
 
-vector<string> Movie::getActors() {
-    return actors;
+vector<string> Movie::getPeople() {
+    return people;
 }
 
 string Movie::getTitle() {
@@ -36,4 +36,11 @@ string Movie::getRating() {
 
 string Movie::getNumOfRaters() {
     return num_votes;
+}
+
+void Movie::addDirector(string a) {
+    directors.push_back(a);
+}
+vector<string> Movie::getDirectors() {
+    return directors;
 }
