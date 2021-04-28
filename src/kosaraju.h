@@ -11,7 +11,9 @@ class Kosaraju {
 
     void dfs1(int node);
     void dfs2(int node);
-
+    vector<int> getComponent();
+    vector<vector<int>> getAllComponents();
+    int getLargestSCCSize();
     private:
 
     vector<bool> visited;
@@ -22,5 +24,6 @@ class Kosaraju {
     map<int, Actor*> reverse_mapping;
     int N;
     int numComponents;
+    int largest_scc_size;
     std::stack<int> S;
 };

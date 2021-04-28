@@ -1,16 +1,16 @@
 #include "alldata.h"
 
 
-AllData::AllData(int numOfMovies, int numOfActors) {
+AllData::AllData(int numOfMovies, int numOfActors, string moviePath, string ratingPath, string actorPath, string directorPath) {
     numOfMoviesToRead = numOfMovies;
     numOfActorsToRead = numOfActors;
     numOfDirectorsToRead = numOfMoviesToRead;
 
     // change file paths here
-    parseMovieNames(numOfMovies, "../data/movies.txt");
-    parseMovieRatings("../data/ratings.txt");
-    parseActors(numOfActors, "../data/actors.txt");
-    parseDirectors("../data/directors.txt");
+    parseMovieNames(numOfMovies, moviePath);
+    parseMovieRatings(ratingPath);
+    parseActors(numOfActors, actorPath);
+    parseDirectors(directorPath);
     parseEdges();
 
     distance = BFS_from_bacon();
@@ -273,18 +273,22 @@ void AllData::parseEdges() {
                 // get all actors and directors
                 
                 for (auto person : people) {
-                    if (find(directors.begin(), directors.end(), person) == directors.end()) {
-                        // find actors only, and say that actor a influenced this director
-                        // cout << "found actor influencing director\n";
-                        Actor* a = actors[person];
-                        a->addInfluence(x.second);
-                        x.second->addInfluenceBy(a);
+                    if (person == x.first) {
+                        // don't add the person himself
+                        continue;
                     }
+                    Actor* a = actors[person];
+                    a->addInfluence(x.second);
+                    x.second->addInfluenceBy(a);
                 }
             } else {
-                // person is actor ID
-                // get all directors
+                // if person is actor
+                // get all directors for this movie
                 for (auto person : directors) {
+                    if (person == x.first) {
+                        // don't add the person himself
+                        continue;
+                    }
                     // cout << "found dir influencing actr\n";
                     Actor* a = actors[person];
                     a->addInfluence(x.second);
@@ -318,10 +322,10 @@ map<Actor*, int> AllData::BFS_from_bacon() {
     map<Actor*, int> visited;
     visited[kevin] = 1;
     queue.push_back(kevin);
+
     while (!queue.empty()) {
         Actor* aa = queue.front();
         queue.pop_front();
-        // cout << aa->getName() << '\n';
         std::set<Actor*> adj = aa->getAdjacent();
         for (auto i = adj.begin(); i != adj.end(); i++) {
             if (visited[*i] == 0) {
@@ -514,10 +518,12 @@ vector<Actor*> AllData::dijkstra(Actor* src, Actor* dest) {
     for (auto &x : path) {
         pointer_path.push_back(reverse_mapping[x]);
     }
+    // this is the shortest path starting with the src and ending on dest
     return pointer_path;
 }
 
 void AllData::kosaraju() {
     Kosaraju k(actors);
-    cout << "done\n";
+    double dec = k.getLargestSCCSize() / (double) actors.size();
+    cout << "The biggest 'clump' of actors takes up " << dec * 100 << " percent of the acting world with a size of " << k.getLargestSCCSize() << "!\n";
 }

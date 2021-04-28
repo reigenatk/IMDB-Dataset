@@ -13,21 +13,29 @@ using std::map;
 class Actor {
 public:
     Actor(std::string actor_name, string birth_year, string death_year, vector<Movie*> movies);
+
+    // unweighted, undirected
     void addAdjacent(Actor* a);
-    std::set<Actor*> getAdjacent();
+    std::set<Actor*> getAdjacent(); // returns acted_with
+    
     string getName();
     vector<Movie*> getMovies();
+
+    // weighted, undirected
     map<Actor*, int> getEdges();
     void addEdge(Actor* a, int d);
-    int getEdge(Actor* a);
+
     void setDirector(bool val);
     bool getIsDirector();
     Movie* getLastMovie();
     void calculateLastMovie();
+
+    // unweighted, directed
     std::set<Actor*> getInfluenced();
     std::set<Actor*> getInfluencedBy();
     void addInfluence(Actor* person);
     void addInfluenceBy(Actor* person);
+    
     bool is_number(const std::string& s);
 
 private:

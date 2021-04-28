@@ -1,4 +1,15 @@
 #include "kosaraju.h"
+vector<int> Kosaraju::getComponent() {
+    return component;
+}
+
+vector<vector<int>> Kosaraju::getAllComponents() {
+    return all_components;
+}
+
+int Kosaraju::getLargestSCCSize() {
+    return largest_scc_size;
+}
 
 void Kosaraju::dfs1(int node) {
     // cout << "now at " << node << '\n';
@@ -57,7 +68,7 @@ Kosaraju::Kosaraju(map<string, Actor*> actors) {
     }
 
     numComponents = 0;
-    cout << "S size: " << S.size() << '\n';
+    cout << "stack size: " << S.size() << '\n';
     vector<int> scc_sizes;
     int sccone = 0;
     while (!S.empty())
@@ -76,9 +87,11 @@ Kosaraju::Kosaraju(map<string, Actor*> actors) {
         }
     }
     std::sort(scc_sizes.begin(), scc_sizes.end());
-    for (int i = 1; i < 10; i++) {
-        cout << scc_sizes[scc_sizes.size() - i] << '\n';
+    for (int i = 1; i <= std::min((int) scc_sizes.size(), 10); i++) {
+        if (i == 1) {
+            largest_scc_size = scc_sizes[scc_sizes.size() - i];
+        }
     }
-    cout << "number of 1 sized scc: " << sccone << '\n';
+    cout << "number of 1 sized sccs: " << sccone << '\n';
 
 }

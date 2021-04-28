@@ -15,6 +15,7 @@ void Movie::addRatingInfo(string rating, string num_votes) {
 }
 
 void Movie::addPerson(string a) {
+    // cout << "aded " << a << " to movie " << title << '\n';
     people.push_back(a);
 }
 

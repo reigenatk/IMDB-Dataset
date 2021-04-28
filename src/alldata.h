@@ -20,7 +20,7 @@ using std::string;
 
 class AllData {
 public:
-    AllData(int numOfMovies, int numOfActors);
+    AllData(int numOfMovies, int numOfActors, string moviePath, string ratingPath, string actorPath, string directorPath);
     void parseMovieNames(int num, string path);
     void parseActors(int num, string path);
     void parseMovieRatings(string path);

@@ -57,7 +57,9 @@ int main() {
         getline(cin, numOfActorsToRead);
     }
 
-    AllData instance(stoi(numOfMoviesToRead), stoi(numOfActorsToRead));
+    // change paths to file here
+    AllData instance(stoi(numOfMoviesToRead), stoi(numOfActorsToRead), "../data/movies.txt", "../data/ratings.txt", "../data/actors.txt", "../data/directors.txt");
+
     map<string, Actor*> actors = instance.getActors();
     map<string, string> actornametoID = instance.getActorNameToID();
     while (true) {

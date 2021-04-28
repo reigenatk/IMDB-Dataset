@@ -47,10 +47,6 @@ map<Actor*, int> Actor::getEdges() {
     return edges;
 }
 
-int Actor::getEdge(Actor* a) {
-    return edges[a];
-}
-
 void Actor::setDirector(bool val) {
     is_director = val;
     // cout << "Director set to true\n";
@@ -75,6 +71,7 @@ void Actor::calculateLastMovie() {
             newest_movie_age = year;
         }
     }
+    // cout << actor_name << "'s last movie is " << ret->getTitle() << '\n';
     last_movie = ret;
 }
 
