@@ -13,7 +13,10 @@ root node in order to find the relevant information.
 
 The next steps will be to implement our next algorithms which are going to involve the rating system somehow.
 
-
 Week of (4/25 to 5/1):
 
-We implemented a fully working version of Dijkstra's algorithm, meeting algorithm 2 of our project proposal. 
+We implemented a fully working version of Dijkstra's algorithm, meeting algorithm 2 of our project proposal.
+
+Implemented Kosaraju's SCC algorithm by using 2 DFS and a custom class for testing
+
+Wrote lots of tests to ensure the algorithms are working properly, adding them to the tests folder.

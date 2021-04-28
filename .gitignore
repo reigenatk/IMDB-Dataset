@@ -1,3 +1,5 @@
-.txt
+*.txt
 /data
 /tests/catch.hpp
+*.out
+*.exe
