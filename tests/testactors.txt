@@ -1,0 +1,8 @@
+nconst	primaryName	birthYear	deathYear	primaryProfession	knownForTitles
+nm0000001	Fred Astaire	1899	1987	soundtrack,actor,miscellaneous	tt0000001,tt0000006
+nm0000002	Lauren Bacall	1924	2014	actress,soundtrack	tt0000001,tt0000003
+nm0000003	Brigitte Bardot	1934	\N	actress,soundtrack,music_department	tt0000002,tt0000004,tt0000005
+nm0000004	Kevin Bacon	1949	1982	writer,director,actor	tt0000002
+nm0000005	Ingmar Bergman	1918	2007	writer,director,actor	tt0000003,tt0000004,tt0000005
+nm0000006	Mike Pants	1938	3001	idk	tt0000001,tt0000002,tt0000006
+nm0000007	Barack Obama	1932	2004	idk	tt0000006,tt0000002

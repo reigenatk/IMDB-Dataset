@@ -19,4 +19,6 @@ We implemented a fully working version of Dijkstra's algorithm, meeting algorith
 
 Implemented Kosaraju's SCC algorithm by using 2 DFS and a custom class for testing
 
-Wrote lots of tests to ensure the algorithms are working properly, adding them to the tests folder.
+Wrote lots of tests to ensure the algorithms are working properly, adding the corresponding txt to the tests folder.
+
+Clean up overall command line text flow
