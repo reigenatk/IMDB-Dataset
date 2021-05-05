@@ -22,3 +22,7 @@ Implemented Kosaraju's SCC algorithm by using 2 DFS and a custom class for testi
 Wrote lots of tests to ensure the algorithms are working properly, adding the corresponding txt to the tests folder.
 
 Clean up overall command line text flow
+
+Week of (5/2 to 5/8):
+
+Mainly working on improving tests, also working on the video + working on the script for the video.
