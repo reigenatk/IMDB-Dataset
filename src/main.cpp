@@ -53,7 +53,7 @@ int main() {
 
     string numOfActorsToRead; // example: 200000, file is 10 million lines long 
     while (!is_number(numOfActorsToRead)) {
-        cout << "How many actors would you like to parse? (example: 200000. file is 10 million long total)\n";
+        cout << "How many actors would you like to parse? (example: 20000. file is 10 million long total)\n";
         getline(cin, numOfActorsToRead);
     }
 

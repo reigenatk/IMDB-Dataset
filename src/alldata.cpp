@@ -462,7 +462,7 @@ vector<Actor*> AllData::dijkstra(Actor* src, Actor* dest) {
         index++;
     }
 
-    vector<int> dist(num_actors, INT_MAX);
+    vector<int> dist(num_actors, INT_MAX - 1);
     vector<bool> isFinal(num_actors, false);
     vector<int> parent(num_actors);
 
@@ -473,6 +473,10 @@ vector<Actor*> AllData::dijkstra(Actor* src, Actor* dest) {
     for (int i = 0; i < num_actors - 1; i++) {
         // find the lowest distance node
         int u = minDistance(dist, isFinal);
+        if (u >= num_actors) {
+            cout << "failed at iteration " << i << " with value " << u << '\n';
+        }
+        // cout << "dijkstra visited " << u << '\n';
         isFinal[u] = true;
         map<Actor*, int> edges = reverse_mapping[u]->getEdges();
         for (int j = 0; j < num_actors; j++) {
