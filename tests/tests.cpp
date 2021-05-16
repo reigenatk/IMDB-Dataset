@@ -3,7 +3,7 @@
 #include "../src/alldata.h"
 #include <algorithm>
 
-TEST_CASE("Test 1") {
+TEST_CASE("TEST ALL") {
 
     // 6 movies 7 actors
     AllData test_instance(6, 7, "./testmovies.txt", "./testratings.txt", "./testactors.txt", "./testdirectors.txt");

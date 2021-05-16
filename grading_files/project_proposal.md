@@ -8,7 +8,7 @@ How to acquire: We get our data in tsv.gz file format. First use 7zip or winzip 
 
 # III Graph Algorithms
 
-## a) graph traversal
+## a) graph traversal BFS
 
 BFS is used to query the data for proximity to Kevin Bacon. When the user wants to find the path to him, we call a BFS orginating from that node. Then we will trace the path
 that the nodes appear until the end, and then retrace them for the full path.
